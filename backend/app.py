@@ -12,8 +12,14 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
     
-    # Enable CORS
-    CORS(app)
+    # Enable CORS with frontend URL
+    CORS(app, resources={
+        r"/api/*": {
+            "origins": [Config.FRONTEND_URL, "http://localhost:3001", "http://localhost:3000"],
+            "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+            "allow_headers": ["Content-Type", "Authorization"]
+        }
+    })
     
     # Initialize SocketIO for real-time updates
     socketio = SocketIO(app, cors_allowed_origins="*")

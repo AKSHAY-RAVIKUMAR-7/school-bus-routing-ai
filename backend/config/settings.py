@@ -11,14 +11,20 @@ class Config:
     
     # Flask settings
     SECRET_KEY = os.getenv('SECRET_KEY', 'dev-secret-key-change-in-production')
-    DEBUG = os.getenv('DEBUG', 'True') == 'True'
+    DEBUG = os.getenv('DEBUG', 'False') == 'True'
+    
+    # Frontend URL for CORS
+    FRONTEND_URL = os.getenv('FRONTEND_URL', 'http://localhost:3001')
     
     # Database settings
     DATABASE_URL = os.getenv('DATABASE_URL', 'postgresql://postgres:postgres@localhost:5432/school_bus')
+    # For production on Render, use SQLite if no PostgreSQL
+    if 'RENDER' in os.environ and not DATABASE_URL.startswith('postgresql'):
+        DATABASE_URL = 'sqlite:///school_bus.db'
     SQLALCHEMY_DATABASE_URI = DATABASE_URL
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     
-    # Redis settings
+    # Redis settings (optional in production)
     REDIS_URL = os.getenv('REDIS_URL', 'redis://localhost:6379/0')
     
     # MQTT settings
